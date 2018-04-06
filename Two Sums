@@ -1,0 +1,51 @@
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+Example:
+Given nums = [2, 7, 11, 15], target = 9,
+
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1].
+
+
+
+
+My code:
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        for(int i = 0; i < nums.size(); i++)
+            for(int j = i+1; j< nums.size(); j++)
+            {
+                if(nums[i]+nums[j] == target)
+                {
+                    vector<int> v;
+                    v.insert(v.begin(),i);
+                    v.insert(v.begin()+1,j);
+                    return  v;
+                }
+            }
+    }
+};
+
+//在我做题的时候，遇到了返回值为vector的问题，然后尝试了许久才解决，归根结底就是对于vector的操作非常不熟悉，首先在初始化方面，使用vector<int> v(n,m)
+//是初始化n个值为m的数，而不是把n和m插入到vector当中。
+
+//好的答案在这里：https://leetcode.com/submissions/detail/148719427/
+//一个比较好理解的答案：
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> m;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (m.count(target - nums[i])) {
+                return {i, m[target - nums[i]]};
+            }
+            m[nums[i]] = i;
+        }
+        while(1);
+        return {};
+    }
+}; 
+//注意map的使用，可以非常快速的查找。
