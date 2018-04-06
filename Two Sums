@@ -30,7 +30,7 @@ public:
 };
 
 //在我做题的时候，遇到了返回值为vector的问题，然后尝试了许久才解决，归根结底就是对于vector的操作非常不熟悉，首先在初始化方面，使用vector<int> v(n,m)
-//是初始化n个值为m的数，而不是把n和m插入到vector当中。
+//是初始化n个值为m的数，而不是把n和m插入到vector当中。（看了解答原来可以直接return (1,2)酱。。。）
 
 //好的答案在这里：https://leetcode.com/submissions/detail/148719427/
 //一个比较好理解的答案：
