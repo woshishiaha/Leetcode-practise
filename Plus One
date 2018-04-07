@@ -1,0 +1,58 @@
+Given a non-negative integer represented as a non-empty array of digits, plus one to the integer.
+
+You may assume the integer do not contain any leading zero, except the number 0 itself.
+
+The digits are stored such that the most significant digit is at the head of the list.
+
+//这道题的翻译：将一个数字的每个位上的数字分别存到一个一维向量中，最高位在最开头，我们需要给这个数字加一，即在末尾数字加一，如果末尾数字是9，那么则会有
+//进位问题，而如果前面位上的数字仍为9，则需要继续向前进位。
+
+My code (Wrong):
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int i = digits.size()-1;
+        while(i < 0)
+        {
+            if(digits[i] == 9)
+                digits[i] = 0;
+            else
+            {
+                digits[i] += 1;
+            }
+            i--;
+        }
+       if(digits.front() == 0)
+       {
+           if(digits.size() > 1)
+            digits.insert(digits.begin(), 1);
+        else
+            digits.front() += 1;
+       }
+        return digits;
+    }
+};
+
+//为什么错呢？
+//假设输入的是｛1，0｝，那么，再循环中，就会进行两次循环，第一次把0加了个1，变成1，然后，此时，第二次又会把1加了个1，变成2，输出就变成了｛2，1｝，而我想要
+//的答案确实｛1，1｝。也就是说，如果数字不是9的话，就不存在进位的情况，也就是说再最后一位加了1之后就可以return了。因此我的代码是有错误的。
+
+
+//下面是正确的代码：
+class Solution {
+public:
+    vector<int> plusOne(vector<int> &digits) {
+        int n = digits.size();
+        for (int i = n - 1; i >= 0; --i) {
+            if (digits[i] == 9) digits[i] = 0;
+            else {
+                digits[i] += 1;
+                return digits;
+            }
+        }
+        if (digits.front() == 0) digits.insert(digits.begin(), 1);
+        return digits;
+    }
+};
+
+
