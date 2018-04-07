@@ -1,0 +1,43 @@
+Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+For example, given the array [−2,1,−3,4,−1,2,1,−5,4],
+the contiguous subarray [4,−1,2,1] has the largest sum = 6.
+
+click to show more practice.
+
+More practice:
+If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
+
+
+My code:
+#define MIN_VALUE (-2147483648)
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int max = MIN_VALUE;
+        int sum = 0, i = 0;
+        while(i < nums.size())
+        {
+            sum += nums[i];
+            if(max < sum)
+            {
+                max = sum;
+            }
+            if(sum < 0)
+            {
+                sum = 0;
+            }
+            i++;
+        }
+        return max;
+    }
+};
+
+//刚看到这道题的时候，我是懵逼的，我一直想着用循环来做（只用循环），一遍一遍的遍历。但是我发现事情并不简单，因为要全部遍历完的话，那时间复杂度估计要爆炸了
+//喂！然后去查了一下，看到了一个叫做Kadane算法的东西。说白了就是，把一个的数组分成若干个小数组，然后求出每个小数组的最大子数组和。当然找这些满足条件的数组
+//是有条件的啦！
+
+//首先分小数组P(a....b)，小数组要满足，数组中所有元素都要小于0。但是，存在a<= k < b，使得P(a...k)之和是要大于0的。那么这个P(a...k)呢，就是最大子
+//数组合啦！
+
+//大概就是这样拉~~leetcode上面的sample基本都是用kadane算法来完成的啦。。
