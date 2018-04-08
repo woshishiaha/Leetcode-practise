@@ -1,0 +1,13 @@
+Given an index k, return the kth row of the Pascal's triangle.
+
+For example, given k = 3,
+Return [1,3,3,1].
+
+Note:
+Could you optimize your algorithm to use only O(k) extra space?
+
+//我并没有什么头绪，但是看到答案就有个很棒棒的算法。
+
+//就是直接用一维vector去解决问题，首先，根据输入的行数确定是要输出哪行数据，然后创建出这一行数据的vector，把第一位设置为1。然后用很精妙的双重循环，使得
+//在每次循环当中，这一个数据加上前一个数据，就是新的这一个数据。（不会的去找leetcode里面的解答，真的超级棒）。当你重新看到这里的时候，请你重新思考一下，
+//该如何实现这个吧。佩服大神啊。。
