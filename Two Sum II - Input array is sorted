@@ -1,0 +1,75 @@
+Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+
+You may assume that each input would have exactly one solution and you may not use the same element twice.
+
+Input: numbers={2, 7, 11, 15}, target=9
+Output: index1=1, index2=2
+
+My code(Not accepted):
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        vector<int> index(2,0);
+        for(int i = numbers.size()-1; i > 0; i--)
+        {
+          //  while(numbers[i] > 0)
+            //{
+            if(numbers[i] < target)
+            {
+                int tar = target - numbers[i];
+                if(tar == numbers[0])
+                {
+                    index[0] = 1, index[1] = i+1;
+                    return index;
+                }
+                int j = i/2;
+                while(j > 0 && j < i)
+                {
+                    if(numbers[j] == tar)
+                    {
+                        index[0] = j+1, index[1] = i+1;
+                        return index;
+                    }
+                    else  if(numbers[j] < tar)
+                    {
+                        j = (i+j)/2;
+                        continue;
+                    }
+                    else if(numbers[j] > tar)
+                    {
+                        j/=2;
+                        continue;
+                    }
+                }
+            }
+           // }
+        }
+        return index;
+    }
+};
+
+//为什么没有通过呢。。因为我没有考虑到负数的情况。。然而为什么每次我考虑问题都会考虑的那么复杂呢。。是真的皮，我本来想着用二分法查询数字会比较方便，但
+//是要考虑的情况实在太多了，而且比较复杂，导致代码也比较的长，所以就很尴尬。以后考虑问题的时候，要优先考虑一下通过++和--来完成的事情（就比如这一道题）。
+
+//人家的代码：
+vector<int> twoSum(vector<int>& numbers, int target) {
+        
+        int l = 0;
+        int r = numbers.size() -1;
+        while(l < r){
+            if(numbers[l] + numbers[r] == target){
+                vector<int> res{l+1,r+1};
+                return res;
+            }
+            else if(numbers[l] + numbers[r] > target){
+                r--;
+            }
+            else{
+                l++;
+            }
+        }
+    }
+    
+//这代码也太sweet了把。。。为什么人家能想到。。。我还在那里，if来id去，还用while，还用for。唉……
