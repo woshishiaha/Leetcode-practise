@@ -1,0 +1,62 @@
+Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+You may assume that the array is non-empty and the majority element always exist in the array.
+
+//这是一个非常简单的问题。但是，由于对知识的掌握不好，所以还是没做出来。
+
+//My code（Wrong）：
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        vector<int> appears;
+        for(int i = 0; i < n; i++)
+        {
+           if(++appears[nums[i]] > n/2)
+               return nums[i];
+        }
+    }
+};
+
+//我当时还在想，怎么去存储他们出现的次数，怎么对比之前的数据发现他是新数据并重新计数。发现我的想法很复杂，不是一般能够解决的，要调用多重循环。我上面的这
+//段代码其实并没有错，只是用错容器去存储这些数据了。看到答案使用的unordered_map，无序表。跟map类似，都是基于key_value来存储数据的，但是unordered_map
+// 不同，他是可以无序的存储key。（换言之map会把key自动排序。）具体的请去百度把。以后有这种，一一对应关系并且要存储的，请都用map。
+
+//Right code：
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        unordered_map<int, int> appears;
+        int n = nums.size();
+        for(int i = 0; i < n; i++)
+        {
+           if(++appears[nums[i]] > n/2)
+               return nums[i];
+        }
+    }
+};
+
+
+
+//除了上面这种方法，discuss里面还有很多种方法，其中有一个算法，叫做Moore's voting算法。每次都找出一对不同的元素，从数组中删掉，直到数组为空或只有
+//一种元素。 不难证明，如果存在元素e出现频率超过半数，那么数组中最后剩下的就只有e。
+
+//实现的思想也很简单，首先假设nums[0]是那个majority，初始化count = 1。然后跟后面的数一一比较，如果是相等的，count++；如果是不同的，就count--。直到count被减到0为止
+//就换成下一个数字做majority。以此类推，等所有数字都被删除干净之后，如果count不等于0，那就证明是有majority的，并且就是那个nums[i]，如果没有，那就
+//没有，好吧。代码：
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+       int majorityIndex = 0;
+        for(int count = 1, i = 1; i < nums.size(); i++)
+        {
+            nums[i] == nums[majorityIndex]? ++count:--count;
+             if(!count)
+            {
+                majorityIndex = i;
+                count = 1;
+             }
+        }
+       
+    }
+};
