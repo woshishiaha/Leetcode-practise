@@ -1,0 +1,52 @@
+Rotate an array ofnelements to the right byksteps.
+
+For example, withn= 7 andk= 3, the array[1,2,3,4,5,6,7]is rotated to[5,6,7,1,2,3,4].
+
+Note:
+Try to come up as many solutions as you can, there are at least 3 different ways to solve this problem.
+
+[show hint]
+
+Hint:
+Could you do it in-place with O(1) extra space?
+
+
+如果允许额外分配线性空间，那么可以错位复制原有数组的元素。如果允许修改原有数组，那么可以通过三次反转
+
+数组来实现收旋转，不需要申请额外空间，并且每次反转时间为O(n)，
+
+三次反转数组：第一次反转整个数组；第二次反转数组的前K个数；第三次反转数组剩下的数
+
+My code:
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        vector<int> a(nums.size(), 0);
+        for(int i = 0; i < nums.size(); i++)
+        {
+            a[(i+k)%nums.size()] = nums[i];
+        }
+        for(int i = 0; i< nums.size(); i++)
+            nums[i] = a[i];
+    }
+};
+
+//思想就是通过取余的方式来遍历数组（从第4位开始遍历到第三位结束）。注意因为key是从0开始所以要减1。至于其他方法嘛。。首先1就是万年不变的老循环，双循环应该
+//可以解决吧，然后就是写一个swap的函数，然后直接调用三次，去排序就好了。
+
+//看到了另外一个答案。虽然也是通过的，但是我不是很理解他的算法为什么会从更高一位（比如我的是从第4位遍历到第3位结束，然而这个是从第5位遍历到第4位结束。）
+
+class Solution{
+public:
+    void rotate(vector<int>& nums,intk) {
+        k = k % nums.size();
+        vector<int> temp = nums;
+        for (int i=0;i<nums.size();++i) {
+            temp.at(i) = nums.at((i+nums.size()-k)%nums.size());
+        }
+        nums = temp;
+    }
+};
+
+//但是学到点东西，首先vector可以直接相等，就是直接把整个vec直接黏贴过去的，但是当然容量是不能小于原vector的。然后就是a[]与a.at()是一样的效果啦。
+
