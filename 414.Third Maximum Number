@@ -1,0 +1,79 @@
+Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the maximum number. The time complexity must be in O(n).
+
+Example 1:
+Input: [3, 2, 1]
+
+Output: 1
+
+Explanation: The third maximum is 1.
+Example 2:
+Input: [1, 2]
+
+Output: 2
+
+Explanation: The third maximum does not exist, so the maximum (2) is returned instead.
+Example 3:
+Input: [2, 2, 3, 1]
+
+Output: 1
+
+Explanation: Note that the third maximum here means the third maximum distinct number.
+Both numbers with value 2 are both considered as second maximum.
+
+我的代码：
+class Solution {
+public:
+    int thirdMax(vector<int>& nums) {
+        sort(nums.rbegin(), nums.rend());
+        if(nums.size() < 3)
+        {
+           if(nums.size() == 2)
+               return nums[0];
+            else
+                return nums[1];
+        }
+        int k = 1;
+        for(int i = 1; i < nums.size(); ++i)
+        {
+            if(nums[i] < nums[i-1])
+                k++;
+            if(k == 3)
+                return nums[i];
+        }
+        return nums[0];
+    }
+};
+
+
+
+
+
+人家的代码：
+class Solution {
+public:
+    int thirdMax(vector<int>& nums) {
+        
+        int first = nums[0];
+        int second = nums[0];
+        int third = nums[0];
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > first) {
+                third = second;
+                second = first;
+                first = nums[i];
+            } else if (nums[i] != first && (nums[i] > second || second == first)) {
+                third = second;
+                second = nums[i];
+            } else if ((nums[i] != first && nums[i] != second) && (nums[i] > third || third == second || third == first)) {
+                third = nums[i];
+            }
+        }
+        if (first > second && second > third) return third;
+        else return first;
+        
+    }
+};
+
+思想：首先用三个int来存储最大的三个数字，第一个if就是更新最大的数（当每个数都不同的时候），第二个if跟第三个if就厉害了。首先条件是不等于，那就是保证了
+nums[i] < first，然后并切nums[i]>second就是更新second啦，然后second == first就是表示，在vector里面遇到了相同的数字，所以也更新second并且把
+third也更新为second。因为要确定是有三个不同的数字才能够输出第三个数字。很巧妙，多推敲。
