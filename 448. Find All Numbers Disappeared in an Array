@@ -1,0 +1,80 @@
+Given an array of integers where 1 ≤ a[i] ≤ n (n = size of array), some elements appear twice and others appear once.
+
+Find all the elements of [1, n] inclusive that do not appear in this array.
+
+Could you do it without extra space and in O(n) runtime? You may assume the returned list does not count as extra space.
+
+Example:
+
+Input:
+[4,3,2,7,8,2,3,1]
+
+Output:
+[5,6]
+
+我自己想到的。。就先排序然后再做咯。
+
+然而，看了许多的答案，其实思想都差不多，因为1 ≤ a[i] ≤ n (n = size of array)这句话，所以每个数字肯定都是有自己专属的位置（按一定顺序排列）的。下面
+就上代码：
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        int n = nums.size();
+        for(int i = 0; i < n; ++i)
+        {
+            int val = abs(nums[i]) - 1;
+            if(nums[val] > 0)
+                nums[val] = -nums[val];
+        }
+        vector<int> res;
+        for(int i = 0; i < n; ++i)
+        {
+            if(nums[i] > 0)
+                res.push_back(i + 1);
+        }
+        return res;
+    }
+};
+
+那么，为什么是要选， nums[i] - 1的位置呢，因为nums[i]就是一个值啦，那么-1了就是说他本来应该在的位置（比如，nums[i] = 3，那么他的对应位置就是3啦，
+那在nums[]的表达式当中就要减1，即是nums[2]啦）。
+
+再看看其他的算法：
+class Solution {
+public:
+vector<int> findDisappearedNumbers(vector<int>& nums) {
+    vector<int> res;
+    if(nums.empty()) return res;
+    int n = nums.size();
+    for(int i = 0; i < n; ++i){
+        while(nums[nums[i]-1] != nums[i]){
+            swap(nums[nums[i]-1], nums[i]);
+        }
+    }
+    for(int i = 0; i < n; ++i){
+        if(nums[i] != i+1){
+            res.push_back(i+1);
+        }
+    }
+    return res;
+}
+};
+
+
+
+or：
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        int len = nums.size();
+        for(int i=0; i<len; i++) {
+            int m = abs(nums[i])-1; // index start from 0
+            nums[m] = nums[m]>0 ? -nums[m] : nums[m];
+        }
+        vector<int> res;
+        for(int i = 0; i<len; i++) {
+            if(nums[i] > 0) res.push_back(i+1);
+        }
+        return res;
+    }
+};
