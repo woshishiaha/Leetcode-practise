@@ -1,0 +1,49 @@
+Given an array of integers and an integer k, you need to find the number of unique k-diff pairs in the array. Here a k-diff pair is defined as an integer pair (i, j), where i and j are both numbers in the array and their absolute difference is k.
+
+Example 1:
+Input: [3, 1, 4, 1, 5], k = 2
+Output: 2
+Explanation: There are two 2-diff pairs in the array, (1, 3) and (3, 5).
+Although we have two 1s in the input, we should only return the number of unique pairs.
+Example 2:
+Input:[1, 2, 3, 4, 5], k = 1
+Output: 4
+Explanation: There are four 1-diff pairs in the array, (1, 2), (2, 3), (3, 4) and (4, 5).
+Example 3:
+Input: [1, 3, 1, 5, 4], k = 0
+Output: 1
+Explanation: There is one 0-diff pair in the array, (1, 1).
+Note:
+The pairs (i, j) and (j, i) count as the same pair.
+The length of the array won't exceed 10,000.
+All the integers in the given input belong to the range: [-1e7, 1e7].
+
+
+ 
+首先 ，我自己想的时候，我不知道我该不该用find的方法（结果一看discuss里面全部都用了），所以就不就结了，然后我就在想，通过对每一个数，进行+k，再去find那个
+加 完的数，然而我发现并不能行得通，比如第一个例子：1+2 = 3， OK，算一个吧，但是后面又有一个1，那又会算一个，而且还不好去判断重复。所以就放弃了，看了
+discuss ，有很大收获，这是代码：
+
+
+class Solution {
+public:
+    int findPairs(vector<int>& nums, int k) {
+        if(k < 0)
+            return 0;
+        unordered_map<int, int> num;
+        for(auto i : nums)
+            num[i]++;
+        int count = 0;
+        for(auto j : num)
+        {
+            if((k==0 && j.second > 1) || (k && num.find(j.first + k) != num.end()))
+               ++count;
+        }
+               return count;
+    }
+};
+ 
+其实 也非常好理解，判断条件当中，如果k = 0，就判断有没有重复的数字，如果k !=0， 那就找跟k相加之后的数字。
+
+ 
+这里，还注意到了这个for(:)，前面是进行迭代的变量，后面是进行迭代的范围，这是c++11当中的新标准（应该是~）.
