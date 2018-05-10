@@ -1,0 +1,86 @@
+Suppose you have a long flowerbed in which some of the plots are planted and some are not. However, flowers cannot be planted in adjacent plots - they would compete for water and both would die.
+
+Given a flowerbed (represented as an array containing 0 and 1, where 0 means empty and 1 means not empty), and a number n, return if n new flowers can be planted in it without violating the no-adjacent-flowers rule.
+
+Example 1:
+Input: flowerbed = [1,0,0,0,1], n = 1
+Output: True
+Example 2:
+Input: flowerbed = [1,0,0,0,1], n = 2
+Output: False
+Note:
+The input array won't violate no-adjacent-flowers rule.
+The input array size is in the range of [1, 20000].
+n is a non-negative integer which won't exceed the input array size.
+
+
+
+My code:
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        int count = n, con = flowerbed.size()-1;
+        if(flowerbed[0] == 0 && flowerbed[1] == 0)
+        {
+            flowerbed[0] = 1;
+            --count;
+             if(count == 0)
+                 return true;
+        }
+        for(int i = 0; i < flowerbed.size(); ++i)
+        {
+            if(flowerbed[i] == 1)
+            {
+                if(con-i >= 3)
+                {
+                    if(flowerbed[i+1] == 0 && flowerbed[i+2] == 0 && flowerbed[i+3] == 0)
+                    {
+                        flowerbed[i+2] = 1;
+                        --count;
+                         if(count == 0)
+                             return true;
+                    }
+                }
+                else if(con-i == 2 && flowerbed[con] == 0)
+                {
+                    flowerbed[con] = 1;
+                    --count;
+                     if(count == 0)
+                        return true;
+                }
+            }
+        }
+        if(count <= 0)
+            return true;
+        else
+            return false;
+    }
+};
+
+
+思想其实很简单，就是依据数据是“1”来进行判断。对于1后三位都是0的，自然要插入1，比较麻烦的是对于最后几位的操作。（我这个方法在letcode里面已经超过97%）
+
+人家的代码（更加快）：
+
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        	int len = flowerbed.size();
+	for (int i = 0; i < len; i++)
+	{
+		if (flowerbed[i] == 0)
+		{
+			int pre = (i == 0) ? 0 : flowerbed[i - 1];
+			int next_ = (i == (len - 1)) ? 0 : flowerbed[i + 1];
+			if (pre + next_ == 0)
+			{
+				n--;
+				flowerbed[i] = 1;
+			}
+		}
+	}
+	return (n <= 0);
+    }
+};
+
+思想其实也非常简单，但是人家是看“0”来进行判断的。算法也很容易懂，但是真的很难想出来，学习一下。
