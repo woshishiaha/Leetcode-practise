@@ -1,0 +1,108 @@
+Given an integer array, find three numbers whose product is maximum and output the maximum product.
+
+Example 1:
+Input: [1,2,3]
+Output: 6
+Example 2:
+Input: [1,2,3,4]
+Output: 24
+Note:
+The length of the given array will be in range [3,104] and all elements are in the range [-1000, 1000].
+Multiplication of any three numbers in the input won't exceed the range of 32-bit signed integer.
+
+My code:
+
+  class Solution {
+  public:
+    int maximumProduct(vector<int>& nums) {
+        if(nums.size() == 3)
+        {
+           int product = nums[0]*nums[1]*nums[2];
+            return product;
+        }
+        int i = nums.size()-1;
+        sort(nums.begin(), nums.end());
+        if(nums[i]*nums[i-1] > nums[0]*nums[1])
+             return nums[i]*nums[i-1]*nums[i-2];
+        else
+            return nums[0]*nums[1]*nums[i];
+        
+       
+       
+    }
+  };
+由于题目是要求涉及到负数的，我刚开始并没有想到用排序来做，而是通过循环来得到最大的三个数，但是我才反应过来有可能是有负数的。所以想到排序之后，思想也很简
+单。但是并没有通过。。。不知道为啥，看一下人家同样思想的solution把。
+
+人家的solution：
+int maximumProduct(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+    int n = nums.size();
+    int temp1 = nums[n-1]*nums[n-2]*nums[n-3];
+    int temp2 = nums[0]*nums[1]*nums[n-1];
+    return temp1>temp2?temp1:temp2;
+}
+
+然而这个方法效率是真的低，辣鸡！但是！！
+
+我看到了另外一种排序方法，叫做partial_sort。这种排序方法是接收了除了头尾迭代器外的另外一个middle迭代器。比如：partial_sort(begin(), begin()+6,
+end());这样会把前6位的数字进行升序排序，并且存储到begin(), begin()+6中。
+但是由于要进行排序，所以时间复杂度是n（nlogn），不稳定，不是很好。
+
+然后就是另外的高效率方法。
+Code：
+  int maximumProduct(vector<int>& nums) {
+        vector<int> data;
+        make_heap(nums.begin(),nums.end());
+        for(int i = 0 ; i < 3 ; ++i)
+        {
+            pop_heap(nums.begin(),nums.end());
+            data.push_back(nums.back());
+            nums.pop_back();
+        }
+        if(nums.size() < 2) return data[0]*data[1]*data[2];
+        else{
+            make_heap(nums.begin(),nums.end(),greater<int>());
+            for(int i = 0 ; i < 2 ; ++i)
+            {
+                pop_heap(nums.begin(),nums.end(),greater<int>());
+                data.push_back(nums.back());
+                nums.pop_back();
+            }
+            return max(data[0]*data[1]*data[2],data[0]*data[3]*data[4]);
+        }
+    }
+    
+    
+    和：
+    int maximumProduct(vector<int>& nums) {
+    priority_queue<int> max_heap;
+    priority_queue<int, vector<int>, greater<int>> min_heap;
+    for (int num : nums)
+    {
+        if (max_heap.size() < 2 || num < max_heap.top())
+        {
+            if (max_heap.size() == 2)
+                max_heap.pop();
+            max_heap.push(num);
+        }
+        if (min_heap.size() < 3 || num > min_heap.top())
+        {
+            if (min_heap.size() == 3)
+                min_heap.pop();
+            min_heap.push(num);
+        }
+    }
+    int b = max_heap.top();
+    max_heap.pop();
+    int a = max_heap.top();
+    int c = min_heap.top();
+    min_heap.pop();
+    int d = min_heap.top();
+    min_heap.pop();
+    int e = min_heap.top();
+    return max(a * b * e, c * d * e);
+}
+
+思想是类似的，都是使用了heap来进行操作，找出数组中最大的三位，存入一个heap当中；再找出数组中最小的两位（因为有可能是负数的情况。），存入另外的一个
+heap当中。
