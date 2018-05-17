@@ -1,0 +1,90 @@
+Given an array with n integers, your task is to check if it could become non-decreasing by modifying at most 1 element.
+
+We define an array is non-decreasing if array[i] <= array[i + 1] holds for every i (1 <= i < n).
+
+Example 1:
+Input: [4,2,3]
+Output: True
+Explanation: You could modify the first 4 to 1 to get a non-decreasing array.
+Example 2:
+Input: [4,2,1]
+Output: False
+Explanation: You can't get a non-decreasing array by modify at most one element.
+
+我的想法：
+
+首先，异常的复杂。。就是把很多很多情况一一考虑，然后根据每次wrong answer去增添判断语句。。看看我的代码吧。
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+        int count = 0, size = nums.size()-1;
+        if(nums.size()<3)
+            return true;
+        if(nums.size() == 3)
+        {
+            if(nums[0] >nums[1] && nums[1]>nums[2])
+                return false;
+            else 
+                return true;
+        }
+        if(nums[0] > nums[1] && nums[1] <= nums[2])
+            count++;
+        for(int i = 1; i<nums.size()-2; ++i)
+        {
+            if(nums[i]>nums[i+1] && nums[i]!=nums[i-1] && nums[i-1]>nums[i+1])
+                return false;
+            if(nums[i]==nums[i-1] && nums[i]>nums[i+1])
+            {
+                if(nums[i] <= nums[i+2])
+                    count++;
+                else
+                    return false;
+            }
+            if(nums[i]>nums[i+1] && nums[i-1]<=nums[i+1])
+                count++;
+        }
+        if(nums[size-1]>nums[size] && nums[size-2]<=nums[size-1])
+            count++;
+        if(nums[size-1]>nums[size] && nums[size-1]!=nums[size-2] && nums[size-2] >nums[size])
+            return false;
+        if(count == 1 || count==0)
+            return true;
+        else 
+            return false;
+    }
+};
+
+很麻烦，判断了一大堆东西，但是并没有什么卵用，我发现在，替换数在最尾的情况，比如：1，2，3，5，4。不知道怎么判断了。然后看了一个人的答案
+
+
+
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+        int count = 0;
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] < nums[i - 1]) {               // the i-th and i-1-th are out of order
+                if (i == 1 ||                          // can be fixed by modifying nums[0];
+                    i == nums.size() - 1) {            // can be fixed by modifying nums[nums.size() - 1]
+                    ++count;
+                }
+                else if (nums[i + 1] >= nums[i - 1] || // can be fixed by modifying nums[i]
+                         nums[i] >= nums[i - 2]) {     // can be fixed by modifying nums[i - 1]
+                    ++count;
+                }
+                else {
+                    return false;
+                }
+                if (count > 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+其实思想也不难，就首先，判断出基本条件就是前一个数要小于后一个数。然后，再根据具体的来判断，首先在队头队尾的情况，然后在其他的情况。然后其他的看为错误。
+
+从这里可以看出一个思维方式，遇到需求，首先先判断出一些基本的判断方式（例如这一题当中的nums[i]<nums[i-1]），然后基于这个判断来扩展其他的，比如一些特殊
+的情况，然后一般的情况，等。
